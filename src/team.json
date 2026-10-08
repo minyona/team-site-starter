@@ -150,7 +150,7 @@
     { "firstName": "Harper", "lastName": "Willowmere", "jersey": 11, "guardians": [{ "name": "Quinn Willowmere", "phone": "555-0109" }] },
     { "firstName": "Izzy", "lastName": "Thornbury", "jersey": 13, "guardians": [{ "name": "Reese Thornbury", "phone": "555-0110" }] },
     { "firstName": "Jo", "lastName": "Cedarholm", "jersey": 14, "guardians": [{ "name": "Kai Cedarholm", "email": "cedarholm.family@example.com" }] },
-    { "firstName": "Kiki", "lastName": "Ashdown", "jersey": 17, "guardians": [{ "name": "Rowan Ashdown", "phone": "555-0112" }] },
+    { "firstName": "Kiki", "lastName": "Ashdown", "jersey": 17, "guardians": [{ "name": "Blair Ashdown", "phone": "555-0112" }] },
     { "firstName": "Lou", "lastName": "Birchwood", "jersey": 21, "guardians": [{ "name": "Emery Birchwood", "phone": "555-0113" }] }
   ],
   "staff": [

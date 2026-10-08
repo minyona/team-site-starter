@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://byminyona.com/sideline/team.schema.json",
   "title": "Sideline team site",
   "description": "Everything one team site renders. Player records deliberately have no birth date, birth year, address, medical or child-contact fields, and additionalProperties:false keeps them out.",
   "type": "object",
