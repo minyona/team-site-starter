@@ -1,0 +1,61 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Sideline//Sample FC U10//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Sample FC U10
+BEGIN:VEVENT
+UID:sample-fc-u10-northwind-20260905@example.com
+DTSTAMP:20260801T150000Z
+DTSTART:20260905T100000
+DTEND:20260905T111500
+SUMMARY:Sample FC U10 vs Northwind SC
+LOCATION:Sampleton Community Park\, Sampleton\, OH
+DESCRIPTION:Fictional league game for the Sample FC U10 demo team.
+END:VEVENT
+BEGIN:VEVENT
+UID:sample-fc-u10-riverbend-20260919@example.com
+DTSTAMP:20260801T150000Z
+DTSTART:20260919T130000
+DTEND:20260919T141500
+SUMMARY:Sample FC U10 vs Riverbend United
+LOCATION:Sampleton Community Park\, Sampleton\, OH
+DESCRIPTION:Fictional league game for the Sample FC U10 demo team.
+END:VEVENT
+BEGIN:VEVENT
+UID:sample-fc-u10-example-athletic-20261003@example.com
+DTSTAMP:20260801T150000Z
+DTSTART:20261003T093000
+DTEND:20261003T104500
+SUMMARY:Sample FC U10 vs Example Athletic
+LOCATION:Sampleton Community Park\, Sampleton\, OH
+DESCRIPTION:Fictional league game for the Sample FC U10 demo team.
+END:VEVENT
+BEGIN:VEVENT
+UID:sample-fc-u10-placeholder-20261010@example.com
+DTSTAMP:20260801T150000Z
+DTSTART:20261010T150000
+DTEND:20261010T161500
+SUMMARY:Sample FC U10 vs Placeholder FC
+LOCATION:Maple Hollow Sports Park\, Sampleton\, OH
+DESCRIPTION:Fictional league game for the Sample FC U10 demo team.
+END:VEVENT
+BEGIN:VEVENT
+UID:sample-fc-u10-demo-city-20261107@example.com
+DTSTAMP:20260801T150000Z
+DTSTART:20261107T110000
+DTEND:20261107T121500
+SUMMARY:Sample FC U10 vs Demo City FC
+LOCATION:Sampleton Community Park\, Sampleton\, OH
+DESCRIPTION:Fictional league game for the Sample FC U10 demo team.
+END:VEVENT
+BEGIN:VEVENT
+UID:sample-fc-u10-lakeshore-20261024@example.com
+DTSTAMP:20260801T150000Z
+DTSTART;VALUE=DATE:20261024
+DTEND;VALUE=DATE:20261026
+SUMMARY:Lakeshore Fall Invitational
+LOCATION:Dune Grass Fields\, Lakeshore\, MI
+DESCRIPTION:Fictional two-day tournament for the Sample FC U10 demo team. Saturday and Sunday.
+END:VEVENT
+END:VCALENDAR
