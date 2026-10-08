@@ -1,0 +1,22 @@
+{
+  "hideFromSearch": true,
+  "privacy": {
+    "allowFullNames": false,
+    "rosterDisplay": "names",
+    "showParentContacts": false
+  },
+  "team": { "name": "Bad Example FC" },
+  "roster": [
+    {
+      "firstName": "Riley",
+      "lastName": "Oakfield",
+      "jersey": 9,
+      "birthYear": 2016,
+      "phone": "555-0142",
+      "note": "Carpool meets at Bramblewick",
+      "guardians": [
+        { "name": "Pat Example", "phone": "555-0143", "email": "pat.example@example.com" }
+      ]
+    }
+  ]
+}

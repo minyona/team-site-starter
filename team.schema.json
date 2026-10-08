@@ -61,6 +61,11 @@
         "showParentContacts": { "type": "boolean", "default": false, "description": "Lists guardian (adult) contacts. Never shown beside a child's full name." }
       }
     },
+    "hideFromSearch": {
+      "type": "boolean",
+      "default": true,
+      "description": "When true, the build marks the site noindex three ways: the robots meta tag, robots.txt, and dist/_headers. A drag-and-drop Netlify deploy ignores netlify.toml, so the file in dist is what ships."
+    },
     "tournaments": { "type": "array", "items": { "$ref": "#/$defs/tournament" } },
     "roster": { "type": "array", "items": { "$ref": "#/$defs/player" } },
     "staff": {

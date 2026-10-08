@@ -37,6 +37,7 @@
     "rosterDisplay": "names",
     "showParentContacts": false
   },
+  "hideFromSearch": true,
   "tournaments": [
     {
       "id": "harvest-classic-2026",
