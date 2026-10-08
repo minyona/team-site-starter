@@ -1,0 +1,243 @@
+{
+  "$schema": "../team.schema.json",
+  "team": {
+    "name": "Sample FC U10",
+    "shortName": "Sample FC",
+    "club": "Sample Football Club",
+    "ageGroup": "U10",
+    "season": "Fall 2026 · Spring 2027",
+    "tagline": "Tournaments, roster, gear and a guide for new families",
+    "pills": ["U10 Girls", "Gold Division", "Demo Team"],
+    "details": [
+      { "label": "Club", "value": "Sample Football Club" },
+      { "label": "Team", "value": "U10 Girls Gold" },
+      { "label": "League", "value": "Sampleton Youth League" },
+      { "label": "Home field", "value": "Sampleton Community Park" }
+    ]
+  },
+  "theme": {
+    "primary": "#2f7d5b",
+    "accent": "#e3a82b",
+    "dark": "#14213d",
+    "paper": "#f4f6f1",
+    "logo": "assets/logo.svg",
+    "headerPhoto": "assets/header-field.jpg",
+    "headerPhotoAlt": "An empty grass soccer field at sunset, lined with autumn trees"
+  },
+  "tabs": [
+    { "id": "tournaments", "enabled": true },
+    { "id": "roster", "enabled": true },
+    { "id": "team", "enabled": true },
+    { "id": "gear", "enabled": true },
+    { "id": "snacks", "enabled": true },
+    { "id": "info", "enabled": true }
+  ],
+  "privacy": {
+    "allowFullNames": false,
+    "rosterDisplay": "names",
+    "showParentContacts": false
+  },
+  "tournaments": [
+    {
+      "id": "harvest-classic-2026",
+      "name": "Harvest Classic",
+      "start": "2026-09-12",
+      "end": "2026-09-13",
+      "state": "Ohio",
+      "tag": "U10 Gold bracket",
+      "status": "local",
+      "result": "gold",
+      "fields": [
+        { "name": "Sampleton Community Park", "address": "100 Example Park Rd, Sampleton, OH", "lat": 39.9446, "lon": -82.9937 }
+      ],
+      "website": "https://example.com/harvest-classic"
+    },
+    {
+      "id": "lakeshore-invitational-2026",
+      "name": "Lakeshore Fall Invitational",
+      "start": "2026-10-24",
+      "end": "2026-10-25",
+      "state": "Michigan",
+      "tag": "Stay-to-play",
+      "status": "stayToPlay",
+      "fields": [
+        { "name": "Dune Grass Fields", "address": "1 Demo Dunes Way, Lakeshore, MI", "lat": 42.9389, "lon": -85.7397 },
+        { "name": "Pinecrest Turf Complex", "address": "2 Placeholder Pines Dr, Lakeshore, MI", "lat": 42.9157, "lon": -85.5847 }
+      ],
+      "website": "https://example.com/lakeshore-invitational",
+      "signup": { "label": "Carpool sign-up", "url": "https://example.com/lakeshore-carpool" },
+      "fieldMap": "https://example.com/lakeshore-field-map.pdf",
+      "checkIn": "The team manager checks the team in on Friday evening. Players only need to arrive 45 minutes before the first game.",
+      "parking": "Parking is $10 per car per day, cash or card. Arrive early on Saturday because the main lot fills by 8 AM.",
+      "notes": ["Game times are published by the tournament on the Wednesday before the event."],
+      "links": [{ "label": "Tournament rules", "url": "https://example.com/lakeshore-rules" }],
+      "dinner": {
+        "title": "Team dinner",
+        "when": "Saturday, Oct 24 · 6:00 PM",
+        "place": "Harborview Pizza Co. (example)",
+        "address": "3 Sample Harbor St, Lakeshore, MI",
+        "note": "Siblings welcome. Each family pays for its own order."
+      },
+      "hotel": {
+        "name": "Lakeshore Grand Suites (example)",
+        "address": "4 Demo Lakefront Blvd, Lakeshore, MI",
+        "kind": "host",
+        "soldOut": true,
+        "soldOutNote": "The host hotel is sold out. Book the Harborview Inn below instead.",
+        "infoUrl": "https://example.com/lakeshore-hotels",
+        "others": [
+          {
+            "name": "Harborview Inn (example)",
+            "address": "5 Sample Marina Ave, Lakeshore, MI",
+            "note": "Stay-to-play approved",
+            "bookingUrl": "https://example.com/harborview-booking"
+          },
+          { "name": "Dunes Motor Lodge (example)", "address": "6 Placeholder Hwy, Lakeshore, MI" }
+        ]
+      }
+    },
+    {
+      "id": "turkey-shootout-2026",
+      "name": "Turkey Shootout",
+      "start": "2026-11-14",
+      "end": "2026-11-15",
+      "state": "Ohio",
+      "status": "local",
+      "fields": [
+        { "name": "Maple Hollow Sports Park", "address": "7 Example Maple Ln, Sampleton, OH", "lat": 40.0076, "lon": -83.0199 }
+      ],
+      "website": "https://example.com/turkey-shootout",
+      "parking": "Free parking in the north lot. The south lot is reserved for referees."
+    },
+    {
+      "id": "frostbite-cup-2027",
+      "name": "Frostbite Indoor Cup",
+      "start": "2027-01-23",
+      "end": "2027-01-24",
+      "state": "Indiana",
+      "status": "tba",
+      "fields": []
+    },
+    {
+      "id": "spring-bloom-cup-2027",
+      "name": "Spring Bloom Cup",
+      "start": "2027-04-17",
+      "end": "2027-04-18",
+      "state": "Kentucky",
+      "tag": "Showcase",
+      "status": "stayToPlay",
+      "fields": [
+        { "name": "Bluegrass Meadow Fields", "address": "8 Demo Meadow Rd, Sampleville, KY", "lat": 38.2009, "lon": -85.7614 }
+      ],
+      "website": "https://example.com/spring-bloom-cup",
+      "hotel": {
+        "name": "Meadowbrook Hotel & Suites (example)",
+        "address": "9 Sample Commerce Pkwy, Sampleville, KY",
+        "kind": "teamBlock",
+        "note": "The team's room block covers April 16 through April 18, 2027. Book by March 20.",
+        "bookingUrl": "https://example.com/meadowbrook-block"
+      }
+    }
+  ],
+  "roster": [
+    { "firstName": "Avery", "lastName": "Oakfield", "jersey": 2, "guardians": [{ "name": "Morgan Oakfield", "phone": "555-0101", "email": "oakfield.family@example.com" }] },
+    { "firstName": "Bella", "lastName": "Brookstone", "jersey": 4, "guardians": [{ "name": "Sam Brookstone", "phone": "555-0102" }] },
+    { "firstName": "Cami", "lastName": "Ridgeway", "jersey": 5, "guardians": [{ "name": "Taylor Ridgeway", "email": "ridgeway.family@example.com" }] },
+    { "firstName": "Dani", "lastName": "Fernhill", "jersey": 7, "guardians": [{ "name": "Pat Fernhill", "phone": "555-0104" }, { "name": "Lee Fernhill", "phone": "555-0105" }] },
+    { "firstName": "Ellie", "lastName": "Marshgate", "jersey": 8, "guardians": [{ "name": "Robin Marshgate", "phone": "555-0106" }] },
+    { "firstName": "Frankie", "lastName": "Hollowell", "jersey": 9, "guardians": [{ "name": "Jesse Hollowell", "email": "hollowell.family@example.com" }] },
+    { "firstName": "Gigi", "lastName": "Stonebridge", "jersey": 10, "guardians": [{ "name": "Drew Stonebridge", "phone": "555-0108" }] },
+    { "firstName": "Harper", "lastName": "Willowmere", "jersey": 11, "guardians": [{ "name": "Quinn Willowmere", "phone": "555-0109" }] },
+    { "firstName": "Izzy", "lastName": "Thornbury", "jersey": 13, "guardians": [{ "name": "Reese Thornbury", "phone": "555-0110" }] },
+    { "firstName": "Jo", "lastName": "Cedarholm", "jersey": 14, "guardians": [{ "name": "Kai Cedarholm", "email": "cedarholm.family@example.com" }] },
+    { "firstName": "Kiki", "lastName": "Ashdown", "jersey": 17, "guardians": [{ "name": "Rowan Ashdown", "phone": "555-0112" }] },
+    { "firstName": "Lou", "lastName": "Birchwood", "jersey": 21, "guardians": [{ "name": "Emery Birchwood", "phone": "555-0113" }] }
+  ],
+  "staff": [
+    { "name": "Jordan Sample", "role": "Head Coach", "phone": "555-0120", "email": "coach.jordan@example.com" },
+    { "name": "Casey Example", "role": "Assistant Coach", "email": "coach.casey@example.com" },
+    { "name": "Riley Demo", "role": "Team Manager", "phone": "555-0122", "email": "manager@example.com" }
+  ],
+  "pathway": [
+    { "title": "U8 Development", "detail": "Small-sided games, ball mastery" },
+    { "title": "U10 Gold", "detail": "7v7, first travel tournaments", "current": true },
+    { "title": "U12 Premier", "detail": "9v9, regional league" },
+    { "title": "U13+ Academy", "detail": "11v11, showcase events" }
+  ],
+  "kits": {
+    "uniforms": [
+      { "name": "Green", "label": "Home", "type": "kit", "shirt": "#2f7d5b" },
+      { "name": "White", "label": "Away", "type": "kit", "shirt": "#f2f3f5", "shorts": "#14213d", "socks": "#f2f3f5", "stroke": "#a3a9b3" },
+      { "name": "Gold", "label": "Third", "type": "kit", "shirt": "#e3a82b", "shorts": "#14213d" },
+      { "name": "Backpack", "label": "Gear", "type": "backpack", "shirt": "#14213d", "stroke": "rgba(0,0,0,.28)" }
+    ],
+    "training": {
+      "shirt": "#14213d",
+      "shorts": "#9aa1ac",
+      "socks": "#14213d",
+      "items": ["Navy training shirt", "Gray shorts", "Navy socks"]
+    },
+    "order": {
+      "supplier": "Sample Sports Outfitters",
+      "details": [
+        { "label": "Club name", "value": "SAMPLE FC" },
+        { "label": "Team", "value": "U10 Girls Gold" }
+      ],
+      "url": "https://example.com/team-store",
+      "buttonLabel": "Order at the team store",
+      "note": "Create an account, then choose Sample FC and U10 Girls Gold."
+    }
+  },
+  "snacks": {
+    "intro": "Families take turns bringing water and a simple snack after each game. Pick a game day that works for you.",
+    "url": "https://example.com/snack-signup",
+    "buttonLabel": "Sign up for a game day",
+    "note": "Opens the team's sign-up sheet. Drinks, a snack, or both."
+  },
+  "links": [
+    { "label": "League schedule", "url": "https://example.com/league-schedule", "description": "Official game times and fields" },
+    { "label": "Club website", "url": "https://example.com/club" }
+  ],
+  "guide": [
+    {
+      "section": "Getting Started",
+      "intro": "Welcome to the team. Here is what each tool is for and where to look when you need something.",
+      "items": [
+        {
+          "q": "Where should I look first?",
+          "open": true,
+          "a": [
+            "The league app is the official source for game times and fields. This site is a quick family reference.",
+            { "list": ["Tournament weekends and hotels", "Roster and staff", "Uniforms and where to order"] },
+            { "tip": "If this page and the league app ever disagree, follow the league app." }
+          ]
+        },
+        {
+          "q": "What does it mean for a player to be carded?",
+          "a": ["A player card is a player's official ID for competitive play. Complete any registration the club sends you before the deadline."]
+        }
+      ]
+    },
+    {
+      "section": "Game Day",
+      "items": [
+        {
+          "q": "How early should we arrive?",
+          "a": [
+            "Players arrive 30 minutes before kickoff unless the coach says otherwise.",
+            { "tip": "Plan for parking and the walk to the field. Ready at the field, not pulling into the lot." }
+          ]
+        },
+        {
+          "q": "What should we bring?",
+          "a": [{ "list": ["Game uniform and both jerseys", "Cleats and shin guards", "Plenty of water", "Weather layers"] }]
+        }
+      ]
+    }
+  ],
+  "footer": {
+    "text": "Made for Sample FC U10 families. Add this page to your home screen for one-tap access.",
+    "showSidelineCredit": true,
+    "sidelineCreditUrl": "https://byminyona.com/sideline"
+  }
+}
