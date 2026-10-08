@@ -201,8 +201,9 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["name", "lat", "lon"],
-      "description": "A playing site. lat/lon feed the map buttons and the weather page.",
+      "description": "A playing site. lat/lon feed the map buttons and the weather page, which asks the National Weather Service for that exact point.",
       "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Short slug that games use to say which field they are on, e.g. \"north-park\". Unique within the tournament." },
         "name": { "type": "string" },
         "address": { "type": "string" },
         "lat": { "type": "number", "minimum": -90, "maximum": 90 },
@@ -250,6 +251,11 @@
         "status": { "enum": ["local", "stayToPlay", "tba"] },
         "result": { "enum": ["gold", "silver", "bronze"], "description": "Completed tournaments only. Adds the medal banner." },
         "fields": { "type": "array", "items": { "$ref": "#/$defs/field" } },
+        "games": {
+          "type": "array",
+          "description": "Optional game schedule. The weather page pins each game on its day's hourly strip, so families see the rain chance and wind at kickoff. Leave it out until the tournament publishes times.",
+          "items": { "$ref": "#/$defs/game" }
+        },
         "website": { "$ref": "#/$defs/url" },
         "signup": { "$ref": "#/$defs/link" },
         "fieldMap": { "$ref": "#/$defs/url", "description": "Field-map PDF or image." },
@@ -270,6 +276,19 @@
           }
         },
         "hotel": { "$ref": "#/$defs/hotel" }
+      }
+    },
+    "time": { "type": "string", "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$", "description": "24-hour local time at the field, e.g. \"08:30\"." },
+    "game": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["date", "time", "opponent"],
+      "properties": {
+        "date": { "$ref": "#/$defs/date", "description": "Game day, between the tournament's start and end." },
+        "time": { "$ref": "#/$defs/time", "description": "Kickoff, in the field's local time." },
+        "arrive": { "$ref": "#/$defs/time", "description": "When players must be at the field. Only shown when set. The page never guesses an arrival time." },
+        "field": { "type": "string", "description": "The id of one of this tournament's fields. Optional when the tournament has a single field." },
+        "opponent": { "type": "string", "description": "Opponent or slot name, e.g. \"Semifinal (if we advance)\"." }
       }
     },
     "player": {

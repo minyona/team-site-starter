@@ -61,8 +61,14 @@
       "tag": "Stay-to-play",
       "status": "stayToPlay",
       "fields": [
-        { "name": "Dune Grass Fields", "address": "1 Demo Dunes Way, Lakeshore, MI", "lat": 42.9389, "lon": -85.7397 },
-        { "name": "Pinecrest Turf Complex", "address": "2 Placeholder Pines Dr, Lakeshore, MI", "lat": 42.9157, "lon": -85.5847 }
+        { "id": "dune-grass", "name": "Dune Grass Fields", "address": "1 Demo Dunes Way, Lakeshore, MI", "lat": 42.9389, "lon": -85.7397 },
+        { "id": "pinecrest", "name": "Pinecrest Turf Complex", "address": "2 Placeholder Pines Dr, Lakeshore, MI", "lat": 42.9157, "lon": -85.5847 }
+      ],
+      "games": [
+        { "date": "2026-10-24", "time": "08:30", "arrive": "07:45", "field": "dune-grass", "opponent": "Riverbend Otters" },
+        { "date": "2026-10-24", "time": "14:00", "arrive": "13:15", "field": "pinecrest", "opponent": "Cobalt Comets" },
+        { "date": "2026-10-25", "time": "10:00", "arrive": "09:15", "field": "dune-grass", "opponent": "Maplewood Foxes" },
+        { "date": "2026-10-25", "time": "14:30", "field": "dune-grass", "opponent": "Semifinal (if we advance)" }
       ],
       "website": "https://example.com/lakeshore-invitational",
       "signup": { "label": "Carpool sign-up", "url": "https://example.com/lakeshore-carpool" },
@@ -104,7 +110,12 @@
       "state": "Ohio",
       "status": "local",
       "fields": [
-        { "name": "Maple Hollow Sports Park", "address": "7 Example Maple Ln, Sampleton, OH", "lat": 40.0076, "lon": -83.0199 }
+        { "id": "maple-hollow", "name": "Maple Hollow Sports Park", "address": "7 Example Maple Ln, Sampleton, OH", "lat": 40.0076, "lon": -83.0199 }
+      ],
+      "games": [
+        { "date": "2026-11-14", "time": "09:00", "arrive": "08:15", "field": "maple-hollow", "opponent": "Harbor Town Herons" },
+        { "date": "2026-11-14", "time": "13:30", "field": "maple-hollow", "opponent": "Silverbrook Stars" },
+        { "date": "2026-11-15", "time": "11:00", "arrive": "10:15", "field": "maple-hollow", "opponent": "Crescent Valley Kites" }
       ],
       "website": "https://example.com/turkey-shootout",
       "parking": "Free parking in the north lot. The south lot is reserved for referees."
