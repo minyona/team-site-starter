@@ -136,9 +136,10 @@ svg{display:block}
 .col .w{display:flex;align-items:center;gap:1px;font-size:10px;font-weight:600;color:var(--ink);letter-spacing:-.3px}
 .col .w .arrow{width:9px;height:9px;flex:0 0 auto}
 .col.none{opacity:.35}
-.kick-line{position:absolute;top:22px;bottom:0;width:2px;margin-left:-1px;background:var(--primary);border-radius:2px;opacity:.7}
-.arrive-band{position:absolute;top:22px;bottom:0;background:color-mix(in srgb,var(--accent) 20%,transparent);
-  border-left:2px dashed var(--accent);border-radius:6px 0 0 6px}
+.kick-stem{position:absolute;top:18px;height:8px;width:2px;margin-left:-1px;background:var(--primary);border-radius:2px}
+.arrive-band{position:absolute;top:24px;bottom:0;background:color-mix(in srgb,var(--accent) 16%,transparent);
+  border-top:3px solid var(--accent);border-radius:3px 0 0 6px}
+.col.kick{box-shadow:inset 0 0 0 2px var(--primary);background:var(--primary-wash)}
 .kick-pill{position:absolute;top:0;transform:translateX(-50%);display:inline-flex;align-items:center;gap:3px;white-space:nowrap;
   background:var(--primary);color:#fff;font-size:10.5px;font-weight:700;line-height:1;padding:4px 6px;border-radius:999px;z-index:3}
 .kick-pill.start{transform:none;margin-left:-4px}
@@ -146,6 +147,12 @@ svg{display:block}
 .kick-pill svg{width:10px;height:10px}
 .strip-empty{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);padding:6px 4px}
 .strip-empty svg{width:18px;height:18px;flex:0 0 auto;margin-top:1px}
+
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 4px 0;font-size:11.5px;color:var(--muted);font-weight:500}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend .arrow{width:11px;height:11px;color:var(--ink)}
+.lg-bar{display:inline-block;width:6px;height:12px;border-radius:3px;background:linear-gradient(0deg,var(--rain) 55%,var(--rain-bg) 55%)}
+.lg-kick{display:inline-block;width:12px;height:12px;border-radius:4px;box-shadow:inset 0 0 0 2px var(--primary);background:var(--primary-wash)}
 
 /* ---------- Game rows ---------- */
 .games{list-style:none;margin:8px 0 0;padding:0}
@@ -155,15 +162,20 @@ svg{display:block}
 .go{flex:1;min-width:0;display:flex;flex-direction:column}
 .go b{font-size:14px;line-height:1.25;overflow-wrap:anywhere}
 .go small{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);font-weight:500}
-.swatch{display:inline-block;width:10px;height:10px;border-radius:3px;border-left:2px dashed var(--accent);
-  background:color-mix(in srgb,var(--accent) 25%,transparent);flex:0 0 auto}
+.swatch{display:inline-block;width:12px;height:10px;border-radius:2px;border-top:3px solid var(--accent);
+  background:color-mix(in srgb,var(--accent) 22%,transparent);flex:0 0 auto}
 .gw{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);flex:0 0 auto}
 .gw .gi{width:22px;height:22px}
 .gw b{font-size:14px;color:var(--ink)}
 .gw span{display:inline-flex;align-items:center;gap:2px}
 .gw span svg{width:11px;height:11px}
 .gw span:first-of-type svg{color:var(--rain)}
-@media (max-width:359px){ .gw span:last-child{display:none} }
+@media (max-width:359px){
+  .gw span:last-child{display:none}
+  .field{padding:10px 6px 8px}
+  .col .temp{font-size:12px;letter-spacing:-.5px}
+  .gt{flex-basis:46px;font-size:18px}
+}
 
 /* ---------- Too-far, error and empty states ---------- */
 .soon{text-align:center;padding:24px 18px 22px}

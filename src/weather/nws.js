@@ -7,7 +7,8 @@
      Period { date, name, isDaytime, tempF, rainPct, windMph, windDir, sky, text, detail }
      Alert  { id, event, headline, severity, ends, instruction }
    date is "YYYY-MM-DD" and hour is 0-23, both read from the offset NWS puts on
-   startTime, so they are already field-local. sky is a key of SKY below.
+   startTime, so they are already field-local. Alert.ends keeps the NWS offset
+   for the same reason. sky is a key of SKY below.
 
    Data source
      ?mock=1      fixtures under ./fixtures, laid out by API path

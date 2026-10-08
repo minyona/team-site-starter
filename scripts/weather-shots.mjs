@@ -53,7 +53,7 @@ async function shoot(browser, ctxOpts, label, shot, { fullPage = true, firstScre
     wide: [...document.querySelectorAll("body *")].filter(el => el.getBoundingClientRect().right > document.documentElement.clientWidth + 0.5 && !el.closest(".tchips")).map(el => el.className || el.tagName).slice(0, 5)
   }));
   assert.deepEqual(errors, [], `${label} ${shot.name}: console errors`);
-  assert.ok(m.scrollW <= m.clientW, `${label} ${shot.name}: horizontal overflow ${m.scrollW} > ${m.clientW} (${m.wide.join(", ")})`);
+  assert.ok(m.scrollW <= m.clientW && !m.wide.length, `${label} ${shot.name}: horizontal overflow ${m.scrollW} > ${m.clientW} (${m.wide.join(", ")})`);
   assert.equal(m.alerts > 0, !!shot.alert, `${label} ${shot.name}: alert banner presence`);
   const file = join(out, `${label}-${shot.name}.png`);
   await page.screenshot({ path: file, fullPage });

@@ -39,11 +39,8 @@ const shortDate = d => `${MON[d.getMonth()]} ${d.getDate()}`;
 const dateRange = (a, b) => a.getMonth() === b.getMonth()
   ? `${MON[a.getMonth()]} ${a.getDate()}–${b.getDate()}, ${a.getFullYear()}`
   : `${shortDate(a)} – ${shortDate(b)}, ${b.getFullYear()}`;
-const untilLabel = iso => {
-  if (!iso) return "";
-  const d = new Date(iso);
-  return `until ${DOW[d.getDay()].slice(0, 3)} ${clockAmPm(d.getHours() * 60 + d.getMinutes())}`;
-};
+/* Read the wall clock NWS wrote, so the time is the field's, not the phone's. */
+const untilLabel = iso => (iso ? `until ${DOW[day(iso.slice(0, 10)).getDay()].slice(0, 3)} ${clockAmPm(toMin(iso.slice(11, 16)))}` : "");
 
 /* ===================== HELPERS ===================== */
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -102,7 +99,8 @@ async function fetchWeekend(w) {
   return { kind: "ready", w, forecasts, alerts };
 }
 
-/* One day at one field: the hours inside the play window and the NWS day and night periods. */
+const SUNNY = { sun: 1, partly: 0.5 };
+
 function dayAt(fc, date) {
   const hours = fc.hours.filter(h => h.date === date && h.hour >= FIRST_HOUR && h.hour <= LAST_HOUR);
   const byHour = new Map(hours.map(h => [h.hour, h]));
@@ -117,7 +115,7 @@ function dayAt(fc, date) {
       maxF: Math.max(...temps),
       maxRain: Math.max(...src.map(h => h.rainPct)),
       maxWind: Math.max(...src.map(h => h.windMph)),
-      sunHours: hours.length ? hours.filter(h => h.sky === "sun" || h.sky === "partly").length : (dayP && (dayP.sky === "sun" || dayP.sky === "partly") ? 6 : 0)
+      sunHours: hours.length ? hours.reduce((n, h) => n + (SUNNY[h.sky] || 0), 0) : (dayP ? (SUNNY[dayP.sky] || 0) * 6 : 0)
     } : null
   };
 }
@@ -150,7 +148,7 @@ const SUN = (cx, cy, r) => `<g stroke="#f2a516" stroke-width="3" stroke-linecap=
   const rad = a * Math.PI / 180, x1 = cx + Math.cos(rad) * (r + 5), y1 = cy + Math.sin(rad) * (r + 5), x2 = cx + Math.cos(rad) * (r + 10), y2 = cy + Math.sin(rad) * (r + 10);
   return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/>`;
 }).join("")}</g><circle cx="${cx}" cy="${cy}" r="${r}" fill="#ffc83d" stroke="#f2a516" stroke-width="2.2"/>`;
-const DROPS = `<g stroke="#2f7fe0" stroke-width="3.2" stroke-linecap="round"><line x1="24" y1="54" x2="21" y2="61"/><line x1="34" y1="54" x2="31" y2="61"/><line x1="44" y1="54" x2="41" y2="61"/></g>`;
+const DROPS = `<g stroke="#2f7fe0" stroke-width="3.2" stroke-linecap="round"><line x1="24" y1="49" x2="21" y2="57"/><line x1="34" y1="49" x2="31" y2="57"/><line x1="44" y1="49" x2="41" y2="57"/></g>`;
 const SKY_ICON = {
   sun: svg(SUN(32, 32, 13)),
   partly: svg(SUN(23, 22, 10) + CLOUD("#eef2f7", "#a9b6c6", 4, 4)),
@@ -186,7 +184,7 @@ const COMPASS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "
 const windArrow = dir => {
   const i = COMPASS.indexOf(dir);
   if (i < 0) return "";
-  return `<svg class="arrow" viewBox="0 0 12 12" style="transform:rotate(${i * 22.5 + 180}deg)" aria-hidden="true"><path d="M6 1v10M2.5 7.5L6 11l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  return `<svg class="arrow" viewBox="0 0 12 12" style="transform:rotate(${i * 22.5}deg)" aria-hidden="true"><path d="M6 1v10M2.5 7.5L6 11l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 };
 
 /* ===================== VIEW PIECES ===================== */
@@ -252,8 +250,8 @@ function renderNow(state) {
     </div>
     <div class="now-text">${esc(p.text)}</div>
     <div class="now-stats">
-      <div class="stat rain">${IC.drop}<b>${d.stats.maxRain}%</b><span>Rain chance</span></div>
-      <div class="stat wind">${windArrow(p.windDir)}<b>${d.stats.maxWind}<small> mph</small></b><span>Wind ${esc(p.windDir)}</span></div>
+      <div class="stat rain">${IC.drop}<b>${d.stats.maxRain}%</b><span>Peak rain chance</span></div>
+      <div class="stat wind">${windArrow(p.windDir)}<b>${d.stats.maxWind}<small> mph</small></b><span>Peak wind ${esc(p.windDir)}</span></div>
       ${first ? `<div class="stat kick">${IC.ball}<b>${first.label}</b><span>First game${atKick ? ` · ${atKick.tempF}°` : ""}</span></div>`
         : `<div class="stat range"><b>${d.stats.minF}–${d.stats.maxF}°</b><span>7 AM to 5 PM</span></div>`}
     </div>
@@ -274,13 +272,14 @@ function renderStrip(d, games) {
     const band = g.arriveMin !== undefined && g.arriveMin < g.min
       ? `<span class="arrive-band" style="left:${pct(Math.max(g.arriveMin, FIRST_HOUR * 60)).toFixed(2)}%;width:${(at - pct(Math.max(g.arriveMin, FIRST_HOUR * 60))).toFixed(2)}%"></span>` : "";
     const edge = at < 7 ? " start" : at > 93 ? " end" : "";
-    return `${band}<span class="kick-line" style="left:${at.toFixed(2)}%"></span><span class="kick-pill${edge}" style="left:${at.toFixed(2)}%">${IC.ball}${clock(g.min)}</span>`;
+    return `${band}<span class="kick-stem" style="left:${at.toFixed(2)}%"></span><span class="kick-pill${edge}" style="left:${at.toFixed(2)}%">${IC.ball}${clock(g.min)}</span>`;
   }).join("");
+  const kickHours = new Set(shown.map(g => Math.floor(g.min / 60)));
   const cols = PLAY_HOURS.map(h => {
     const x = d.byHour.get(h);
     if (!x) return `<li class="col none"><span class="t">${hourLabel(h)}</span></li>`;
     const rain = x.rainPct;
-    return `<li class="col${rain >= 40 ? " wet" : ""}">
+    return `<li class="col${rain >= 40 ? " wet" : ""}${kickHours.has(h) ? " kick" : ""}">
       <span class="sr">${hourLabel(h)}: ${x.tempF}°, ${rain}% rain, wind ${esc(x.windDir)} ${x.windMph} mph, ${esc(x.text)}.</span>
       <span class="t" aria-hidden="true">${hourLabel(h)}</span>
       ${skyIcon(x.sky, "i")}
@@ -362,6 +361,8 @@ function renderSoonCard(s) {
   </section>`;
 }
 
+const LEGEND = `<div class="legend" aria-hidden="true"><span><i class="lg-bar"></i>Rain chance</span><span>${windArrow("S")}Wind toward, mph</span><span><i class="swatch"></i>Arrival window</span><span><i class="lg-kick"></i>Kickoff hour</span></div>`;
+
 /* ===================== VIEWS (one per state kind) ===================== */
 const message = (title, body, extra = "") => `<section class="now note"><h2>${title}</h2><p>${body}</p>${extra}</section>`;
 const backBtn = `<div class="actions"><a class="btn ghost" href="../#tournaments">${IC.back}Back to tournaments</a></div>`;
@@ -379,7 +380,7 @@ const VIEWS = {
   ready: s => {
     const focus = focusOf(s).date;
     return `<div class="layout"><div class="lead">${renderNow(s)}</div>
-      <div class="rest">${s.w.dates.map(date => renderDay(s, date, date === focus)).join("")}</div></div>`;
+      <div class="rest">${s.w.dates.map(date => renderDay(s, date, date === focus)).join("")}${LEGEND}</div></div>`;
   }
 };
 
@@ -392,7 +393,7 @@ function applyTheme(th) {
 }
 
 function renderFooter(state) {
-  const sample = source === "fixtures";
+  const sample = source === "fixtures" && state.kind === "ready";
   return `<footer class="foot">
     ${sample ? `<div class="sample">Sample forecast for the demo. Not real weather.</div>` : ""}
     <div>Forecast and alerts from the National Weather Service${state.w && state.w.fields[0] ? ` · <a href="${esc(nwsPage(state.w.fields[0]))}" target="_blank" rel="noopener">forecast.weather.gov</a>` : ""}</div>
