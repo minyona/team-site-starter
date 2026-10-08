@@ -288,7 +288,7 @@
         "time": { "$ref": "#/$defs/time", "description": "Kickoff, in the field's local time." },
         "arrive": { "$ref": "#/$defs/time", "description": "When players must be at the field. Only shown when set. The page never guesses an arrival time." },
         "field": { "type": "string", "description": "The id of one of this tournament's fields. Optional when the tournament has a single field." },
-        "opponent": { "type": "string", "description": "Opponent or slot name, e.g. \"Semifinal (if we advance)\"." }
+        "opponent": { "type": "string", "description": "Opponent team name. The page shows it as \"vs <opponent>\", so a bracket slot reads well as \"TBD · semifinal if we advance\"." }
       }
     },
     "player": {
