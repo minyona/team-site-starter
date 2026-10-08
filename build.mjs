@@ -43,6 +43,7 @@ const payload = JSON.stringify(shipped).replace(/</g, "\\u003c");
 fs.rmSync(distDir, { recursive: true, force: true });
 fs.cpSync(srcDir, distDir, { recursive: true });
 fs.rmSync(path.join(distDir, "team.json"), { force: true });
+fs.cpSync(path.join(srcDir, "weather"), path.join(distDir, "weather"), { recursive: true });
 
 let html = fs.readFileSync(path.join(distDir, "index.html"), "utf8");
 const robots = flags.hideFromSearch ? "noindex, nofollow" : "index, follow";
@@ -111,3 +112,4 @@ console.log(flags.hideFromSearch
   ? "search: hidden via meta robots, robots.txt, and _headers"
   : "search: visible (hideFromSearch is false)");
 console.log("icons: assets/apple-touch-icon.png (180), assets/icon-192.png, assets/icon-512.png");
+console.log("weather: copied src/weather into dist/weather");

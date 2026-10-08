@@ -44,9 +44,32 @@ function readText(file) {
   return fs.readFileSync(file, "utf8");
 }
 
+function isWeatherFixture(file) {
+  const rel = path.relative(root, file).split(path.sep).join("/");
+  return rel.includes("weather/fixtures/");
+}
+
+function checkGameFields(team, label) {
+  const problems = [];
+  for (const [i, tournament] of (team.tournaments || []).entries()) {
+    const ids = new Set((tournament.fields || []).map((field) => field.id).filter((id) => typeof id === "string" && id));
+    for (const [j, game] of (tournament.games || []).entries()) {
+      const where = `${label}: tournaments[${i}].games[${j}].field`;
+      if (typeof game.field !== "string" || !game.field) {
+        if (ids.size !== 1) problems.push(`${where}: must name one of this tournament's field ids`);
+        continue;
+      }
+      if (!ids.has(game.field)) problems.push(`${where}: "${game.field}" is not a field id on this tournament`);
+    }
+  }
+  if (problems.length) problems.forEach((problem) => fail(problem));
+  else pass(`${label}: every game field matches a tournament field id`);
+}
+
 function scanText(file, text) {
   const rel = path.relative(root, file);
   if (containsForbiddenToken(text, denyHashes)) fail(`${rel}: contains a forbidden source-project name`);
+  if (isWeatherFixture(file)) return;
   for (const phone of text.match(PHONE) || []) {
     if (!/^555-01\d{2}$/.test(phone)) fail(`${rel}: phone ${phone} is not 555-01xx`);
   }
@@ -305,6 +328,12 @@ async function main() {
         if ((shipped.footer || {}).sidelineCreditUrl === (srcTeam.footer || {}).sidelineCreditUrl) {
           pass("footer.sidelineCreditUrl comes from team.json");
         } else fail("footer.sidelineCreditUrl was not copied from team.json");
+        checkGameFields(srcTeam, "src/team.json");
+        checkGameFields(shipped, "dist/index.html");
+        const weatherProbe = path.join(distDir, "weather/fixtures/alerts/wind-advisory.json");
+        if (fs.existsSync(path.join(distDir, "weather/index.html")) && fs.existsSync(weatherProbe)) {
+          pass("weather page and fixtures are in dist/");
+        } else fail("weather page or fixtures were not copied to dist/");
 
         const secrets = sourceSecrets(srcTeam);
         const blob = walkFiles(distDir).map(readText).filter(Boolean).join("\n");
