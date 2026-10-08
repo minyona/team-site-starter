@@ -1,0 +1,56 @@
+{
+ "@context": [
+  "https://geojson.org/geojson-ld/geojson-context.jsonld",
+  {
+   "@version": "1.1"
+  }
+ ],
+ "id": "https://api.weather.gov/points/42.9389,-85.7397",
+ "type": "Feature",
+ "geometry": {
+  "type": "Point",
+  "coordinates": [
+   -85.7397,
+   42.9389
+  ]
+ },
+ "properties": {
+  "@id": "https://api.weather.gov/points/42.9389,-85.7397",
+  "@type": "wx:Point",
+  "cwa": "LKS",
+  "forecastOffice": "https://api.weather.gov/offices/LKS",
+  "gridId": "LKS",
+  "gridX": 41,
+  "gridY": 52,
+  "forecast": "https://api.weather.gov/gridpoints/LKS/41,52/forecast",
+  "forecastHourly": "https://api.weather.gov/gridpoints/LKS/41,52/forecast/hourly",
+  "forecastGridData": "https://api.weather.gov/gridpoints/LKS/41,52",
+  "observationStations": "https://api.weather.gov/gridpoints/LKS/41,52/stations",
+  "relativeLocation": {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -85.7297,
+     42.948899999999995
+    ]
+   },
+   "properties": {
+    "city": "Lakeshore",
+    "state": "MI",
+    "distance": {
+     "unitCode": "wmoUnit:m",
+     "value": 1840
+    },
+    "bearing": {
+     "unitCode": "wmoUnit:degree_(angle)",
+     "value": 210
+    }
+   }
+  },
+  "forecastZone": "https://api.weather.gov/zones/forecast/MIZ057",
+  "county": "https://api.weather.gov/zones/county/MIC081",
+  "timeZone": "America/Detroit",
+  "radarStation": "KLKS"
+ }
+}
