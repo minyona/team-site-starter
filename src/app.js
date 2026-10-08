@@ -220,7 +220,10 @@ function tournamentCard(x, isNext) {
   const status = STATUS[x.status] || STATUS.tba;
   const details = detailsBlock(x, past), hotel = hotelBlock(x);
   const dayLabel = a.getDate() + (b.getDate() !== a.getDate() ? "–" + b.getDate() : "");
+  const pinned = new URLSearchParams(location.search).get("today");
+  const weatherHref = "weather/?t=" + encodeURIComponent(x.id) + (pinned ? "&today=" + encodeURIComponent(pinned) : "");
   const acts = [
+    !past && fields.length ? `<a class="btn primary" href="${esc(weatherHref)}">${SVG('<path d="M7 18a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 17.8 8 4.5 4.5 0 0 1 17.5 18z"/>')}Weekend weather</a>` : "",
     ...fields.map(f => btn(fieldMapUrl(f), IC.pin, fields.length > 1 ? "Map " + f.name : "Map")),
     btn(x.fieldMap, IC.ext, "Field map"),
     x.signup ? btn(x.signup.url, IC.ext, x.signup.label) : "",
