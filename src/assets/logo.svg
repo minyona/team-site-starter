@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" role="img" aria-label="Sample FC crest">
+  <path d="M60 4 112 20v44c0 34-22 58-52 72C30 122 8 98 8 64V20z" fill="#14213d"/>
+  <path d="M60 14 103 27v37c0 28-18 49-43 61C35 113 17 92 17 64V27z" fill="#2f7d5b"/>
+  <path d="M17 64h86" stroke="#e3a82b" stroke-width="5"/>
+  <circle cx="60" cy="88" r="17" fill="#fff"/>
+  <path d="M60 76l8 6-3 9.5h-10L52 82z" fill="#14213d"/>
+  <path d="M60 76v-5M68 82l5-2M65 91.5l3 4.5M55 91.5l-3 4.5M52 82l-5-2" stroke="#14213d" stroke-width="2.2" stroke-linecap="round"/>
+  <text x="60" y="52" text-anchor="middle" font-family="'Barlow Condensed','Arial Narrow',Arial,sans-serif" font-weight="800" font-size="30" fill="#fff" letter-spacing="1">SFC</text>
+</svg>
