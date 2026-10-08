@@ -11,38 +11,128 @@
    for the same reason. sky is a key of SKY below.
 
    Data source
+     live         https://api.weather.gov when LIVE is true and no ?mock
      ?mock=1      fixtures under ./fixtures, laid out by API path
      ?mock=alert  fixtures plus an active Wind Advisory at every point
      ?mock=down   every call fails with NwsError("unavailable")
-   Until LIVE is true the page always reads fixtures. */
+   source is "live" only for a real fetch, so the sample label stays on fixtures.
 
-const LIVE = false;
+   Live cache, in sessionStorage, never a failure
+     points 24 h, gridpoint forecasts 30 min, alerts 5 min, keyed by URL.
+     One in-flight promise per URL, so two fields on the same grid cell share it.
+     5xx and timeouts try twice more, after 1 s then 3 s. */
 
-/* TODO(live NWS): implement liveLoad(url), flip LIVE, keep everything else.
-   Input   an absolute https://api.weather.gov URL built by the getters below.
-   Output  the parsed JSON body (GeoJSON).
-   Request headers  Accept: application/geo+json. Try User-Agent
-     "Sideline team site (+https://byminyona.com/sideline)"; browsers drop it
-     silently, so never make success depend on it. No API key exists or is sent.
-   Errors, always thrown as NwsError so the page can pick its state:
-     404 on /points, or a gridpoint forecast that has no periods yet
-       -> NwsError("notYet"). The page shows "forecast opens about a week before".
-     5xx, or the known "Unexpected Problem" 500 from gridpoint forecasts
-       -> retry, then NwsError("unavailable").
-     no response within 8 s (AbortController) -> retry, then NwsError("timeout").
-     anything else (4xx, bad JSON) -> NwsError("unavailable"), no retry.
-   Retry   two more attempts at 1 s then 3 s, for 5xx and timeouts only.
-     The page's "Try again" button calls the getters afresh.
-   Caching per point
-     /points/{lat},{lon} barely changes. Keep it in localStorage under
-       "nws:points:{lat},{lon}" for 24 h.
-     forecast, forecast/hourly and alerts: in memory for the page's life, keyed
-       by URL, plus sessionStorage for 10 min so a refresh during a game is
-       instant. Two fields on one grid cell share the forecast entry.
-     Share the in-flight promise so concurrent getters make one request per URL.
-     Never cache a failure. */
-async function liveLoad(url) {
-  throw new NwsError("unavailable", "Live NWS fetch is not wired yet: " + url);
+const LIVE = true;
+
+const USER_AGENT = "Sideline team site (+https://byminyona.com/sideline)";
+const TIMEOUT_MS = 8000;
+const RETRY_AFTER_MS = [1000, 3000];
+const RESOURCE = [
+  { ttl: 24 * 60 * 60 * 1000, miss: "notYet", test: path => path.startsWith("/points/") },
+  { ttl: 5 * 60 * 1000, miss: "unavailable", test: path => path.startsWith("/alerts/") },
+  { ttl: 30 * 60 * 1000, miss: "notYet", test: path => path.startsWith("/gridpoints/") }
+];
+
+const inflight = new Map();
+
+function resourceFor(url) {
+  const path = new URL(url).pathname;
+  return RESOURCE.find(row => row.test(path)) || RESOURCE[2];
+}
+
+function readCache(url) {
+  try {
+    const raw = sessionStorage.getItem("nws:" + url);
+    if (!raw) return null;
+    const rec = JSON.parse(raw);
+    if (!rec || typeof rec.exp !== "number" || Date.now() >= rec.exp) {
+      sessionStorage.removeItem("nws:" + url);
+      return null;
+    }
+    return rec.body;
+  } catch {
+    return null;
+  }
+}
+
+function writeCache(url, body) {
+  try {
+    sessionStorage.setItem("nws:" + url, JSON.stringify({
+      exp: Date.now() + resourceFor(url).ttl,
+      body
+    }));
+  } catch {
+    /* quota, or storage blocked in a private window */
+  }
+}
+
+function retryable(kind, message) {
+  const err = new NwsError(kind, message);
+  err.retryable = true;
+  return err;
+}
+
+function settle(err) {
+  if (!(err instanceof NwsError) || !err.retryable) return err;
+  return new NwsError(err.kind === "timeout" ? "timeout" : "unavailable", err.message);
+}
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+function nwsHeaders() {
+  // Browsers drop a script-set User-Agent. NWS still gets the browser's own.
+  return { Accept: "application/geo+json", "User-Agent": USER_AGENT };
+}
+
+async function fetchOnce(url) {
+  if (globalThis.navigator && navigator.onLine === false) throw new NwsError("unavailable", "Offline");
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { headers: nwsHeaders(), signal: ctrl.signal });
+    if (res.status === 404) throw new NwsError(resourceFor(url).miss, "NWS HTTP 404");
+    if (res.status >= 500) throw retryable("unavailable", "NWS HTTP " + res.status);
+    if (!res.ok) throw new NwsError("unavailable", "NWS HTTP " + res.status);
+    try {
+      return await res.json();
+    } catch {
+      throw new NwsError("unavailable", "NWS returned unreadable JSON");
+    }
+  } catch (err) {
+    if (err instanceof NwsError) throw err;
+    if (err && err.name === "AbortError") throw retryable("timeout", "NWS timed out");
+    throw new NwsError("unavailable", (err && err.message) || "Offline");
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function loadFresh(url) {
+  let last;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt) await sleep(RETRY_AFTER_MS[attempt - 1]);
+    try {
+      const body = await fetchOnce(url);
+      writeCache(url, body);
+      return body;
+    } catch (err) {
+      last = err;
+      if (!(err instanceof NwsError) || !err.retryable || attempt === 2) throw settle(err);
+    }
+  }
+  throw settle(last);
+}
+
+function liveLoad(url) {
+  const cached = readCache(url);
+  if (cached) return Promise.resolve(cached);
+  const pending = inflight.get(url);
+  if (pending) return pending;
+  const task = loadFresh(url).finally(() => {
+    if (inflight.get(url) === task) inflight.delete(url);
+  });
+  inflight.set(url, task);
+  return task;
 }
 
 export class NwsError extends Error {
