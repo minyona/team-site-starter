@@ -63,6 +63,13 @@ if (!html.includes('src="app.js"')) die(["src/index.html: missing app.js script"
 html = html.replace('<script src="app.js"></script>', hook + '<script src="app.js"></script>');
 fs.writeFileSync(path.join(distDir, "index.html"), html);
 
+const weatherPage = path.join(distDir, "weather", "index.html");
+let weatherHtml = fs.readFileSync(weatherPage, "utf8");
+const weatherTag = '<script type="module" src="weather.js"></script>';
+if (!weatherHtml.includes(weatherTag)) die(["src/weather/index.html: missing weather.js script"]);
+weatherHtml = weatherHtml.replace(weatherTag, hook + weatherTag);
+fs.writeFileSync(weatherPage, weatherHtml);
+
 const manifestPath = path.join(distDir, "manifest.webmanifest");
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const icons = Array.isArray(manifest.icons) ? manifest.icons.filter((icon) => icon.type === "image/svg+xml") : [];
@@ -112,4 +119,4 @@ console.log(flags.hideFromSearch
   ? "search: hidden via meta robots, robots.txt, and _headers"
   : "search: visible (hideFromSearch is false)");
 console.log("icons: assets/apple-touch-icon.png (180), assets/icon-192.png, assets/icon-512.png");
-console.log("weather: copied src/weather into dist/weather");
+console.log("weather: inlined team data into dist/weather/index.html");
