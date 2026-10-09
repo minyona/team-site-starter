@@ -1,6 +1,3 @@
-// Screenshots and layout checks for /weather/, served from dist/ after node build.mjs.
-// Usage: PLAYWRIGHT=<path to playwright> node scripts/weather-shots.mjs [outDir]
-// PLAYWRIGHT defaults to "playwright", so a local `npm i playwright` also works.
 import { createServer } from "node:http";
 import { existsSync, mkdirSync, readFileSync, statSync } from "node:fs";
 import { extname, join, normalize } from "node:path";
