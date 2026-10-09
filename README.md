@@ -248,11 +248,11 @@ Do not commit the old folder to the public repo. Full names in an old `src/team.
 
 ## Open the weekend weather page
 
-Each tournament card has a Weekend weather button. The page asks for the forecast at each field's `lat` and `lon`. It shows the hours from 7 in the morning through 5 in the afternoon, and it marks kickoff when a game has a `time`.
+Each tournament card has a Weekend weather button. By default the page asks the National Weather Service for the live forecast at each field's `lat` and `lon`. It shows the hours from 7 in the morning through 5 in the afternoon, and it marks kickoff when a game has a `time`.
 
 The National Weather Service publishes about seven days ahead. If the tournament starts further out than that, the page says the forecast is not open yet. Pin the date with `?today=2026-10-23` when you want to preview a weekend that is otherwise too far away.
 
-`?mock=1` forces the sample forecast shipped with this repo. The demo already uses that sample until a live forecast is connected. Keep `?mock=1` on any link you send families while you are still previewing, so the page does not jump to live weather later.
+A `?mock=` query flag forces the sample fixtures shipped with this repo. `?mock=1` is the plain sample. `?mock=alert` uses that sample and adds a wind advisory. `?mock=down` shows the outage message, so you can see what families see when the forecast does not load.
 
 This address previews the sample Lakeshore weekend.
 
@@ -262,7 +262,7 @@ This address previews the sample Lakeshore weekend.
 
 On your computer, that is `http://localhost:8000/weather/?t=lakeshore-invitational-2026&today=2026-10-23&mock=1`.
 
-`?t=` is the tournament `id`. Without it, the page picks the next tournament that still has a field with coordinates. `?mock=alert` uses the same sample and adds a wind advisory. `?mock=down` shows the outage message, so you can see what families see when the forecast does not load.
+`?t=` is the tournament `id`. Without it, the page picks the next tournament that still has a field with coordinates. Leave `?mock=` off when you want the live forecast.
 
 ## Block a word with the denylist
 
