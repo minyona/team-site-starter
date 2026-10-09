@@ -450,6 +450,22 @@ async function main() {
           if ((manifest.icons || []).some((icon) => icon.src === src)) pass(`manifest lists ${src}`);
           else fail(`manifest is missing ${src}`);
         }
+        const homeName = srcTeam.team.name;
+        const homeShort = srcTeam.team.shortName || homeName;
+        const homeColor = (srcTeam.theme || {}).dark;
+        if (manifest.name !== homeName) fail(`manifest name does not match team.json (${manifest.name})`);
+        else pass("manifest name matches team.json");
+        if (manifest.short_name !== homeShort) fail(`manifest short_name does not match team.json (${manifest.short_name})`);
+        else pass("manifest short_name matches team.json");
+        if (manifest.theme_color !== homeColor) fail(`manifest theme_color does not match team.json (${manifest.theme_color})`);
+        else pass("manifest theme_color matches team.json");
+        if (Object.prototype.hasOwnProperty.call(manifest, "background_color")) {
+          if (manifest.background_color !== homeColor) fail(`manifest background_color does not match team.json (${manifest.background_color})`);
+          else pass("manifest background_color matches team.json");
+        }
+        const credits = walkFiles(distDir).filter((file) => path.basename(file) === "CREDITS.md");
+        if (credits.length) fail("dist contains CREDITS.md");
+        else pass("dist contains no CREDITS.md");
 
         const urls = [];
         collectUrls(shipped, urls);
