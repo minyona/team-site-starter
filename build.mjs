@@ -43,6 +43,7 @@ const payload = JSON.stringify(shipped).replace(/</g, "\\u003c");
 fs.rmSync(distDir, { recursive: true, force: true });
 fs.cpSync(srcDir, distDir, { recursive: true });
 fs.rmSync(path.join(distDir, "team.json"), { force: true });
+fs.rmSync(path.join(distDir, "assets", "CREDITS.md"), { force: true });
 fs.cpSync(path.join(srcDir, "weather"), path.join(distDir, "weather"), { recursive: true });
 
 let html = fs.readFileSync(path.join(distDir, "index.html"), "utf8");
@@ -63,8 +64,22 @@ if (!html.includes('src="app.js"')) die(["src/index.html: missing app.js script"
 html = html.replace('<script src="app.js"></script>', hook + '<script src="app.js"></script>');
 fs.writeFileSync(path.join(distDir, "index.html"), html);
 
+const weatherPage = path.join(distDir, "weather", "index.html");
+let weatherHtml = fs.readFileSync(weatherPage, "utf8");
+const weatherTag = '<script type="module" src="weather.js"></script>';
+if (!weatherHtml.includes(weatherTag)) die(["src/weather/index.html: missing weather.js script"]);
+weatherHtml = weatherHtml.replace(weatherTag, hook + weatherTag);
+fs.writeFileSync(weatherPage, weatherHtml);
+
 const manifestPath = path.join(distDir, "manifest.webmanifest");
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+const theme = team.theme || {};
+manifest.name = team.team.name;
+manifest.short_name = team.team.shortName || team.team.name;
+if (theme.dark) {
+  manifest.theme_color = theme.dark;
+  if (Object.prototype.hasOwnProperty.call(manifest, "background_color")) manifest.background_color = theme.dark;
+}
 const icons = Array.isArray(manifest.icons) ? manifest.icons.filter((icon) => icon.type === "image/svg+xml") : [];
 icons.push(
   { src: "assets/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
@@ -74,7 +89,6 @@ icons.push(
 manifest.icons = icons;
 fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
 
-const theme = team.theme || {};
 fs.writeFileSync(path.join(distDir, "assets/apple-touch-icon.png"), crestPng(180, theme));
 fs.writeFileSync(path.join(distDir, "assets/icon-192.png"), crestPng(192, theme));
 fs.writeFileSync(path.join(distDir, "assets/icon-512.png"), crestPng(512, theme));
@@ -112,4 +126,4 @@ console.log(flags.hideFromSearch
   ? "search: hidden via meta robots, robots.txt, and _headers"
   : "search: visible (hideFromSearch is false)");
 console.log("icons: assets/apple-touch-icon.png (180), assets/icon-192.png, assets/icon-512.png");
-console.log("weather: copied src/weather into dist/weather");
+console.log("weather: inlined team data into dist/weather/index.html");

@@ -1,14 +1,15 @@
-// Screenshots and layout checks for /weather/, served from src/ with fixture data.
-// Usage: PLAYWRIGHT=<path to playwright> node scripts/weather-shots.mjs [outDir]
-// PLAYWRIGHT defaults to "playwright", so a local `npm i playwright` also works.
 import { createServer } from "node:http";
-import { mkdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, statSync } from "node:fs";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import assert from "node:assert/strict";
 
 const { webkit, chromium, devices } = await import(process.env.PLAYWRIGHT || "playwright");
-const root = fileURLToPath(new URL("../src/", import.meta.url));
+const root = fileURLToPath(new URL("../dist/", import.meta.url));
+if (!existsSync(join(root, "index.html"))) {
+  console.error("dist/index.html is missing. Run node build.mjs first.");
+  process.exit(1);
+}
 const out = process.argv[2] || "weather-shots";
 mkdirSync(out, { recursive: true });
 
