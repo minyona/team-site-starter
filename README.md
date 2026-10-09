@@ -10,11 +10,11 @@ The team in this repo is Sample FC. Every player, family, field, hotel, and club
 
 You need [Node.js](https://nodejs.org/) 18 or newer. There is nothing to install.
 
-1. Copy this repo. On GitHub, choose **Code**, then **Download ZIP**, and unzip it. Or use the Deploy to Netlify button below. That button copies the repo into your GitHub account and publishes it.
+1. Copy this repo. On GitHub, click the green [**Use this template**](https://github.com/minyona/team-site-starter/generate) button. GitHub makes a repo in your account. Edits in your repo do not change this repo. The Deploy to Netlify button below is the one-click alternative. That button copies the repo into your GitHub account and publishes it. If you do not use GitHub, choose **Code**, then **Download ZIP**, and unzip it.
 2. Edit `src/team.json`. That file is the whole site.
 3. Deploy. Netlify runs `node build.mjs` and publishes the `dist` folder. It does not install packages.
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/minyona/team-site-starter)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/minyona/team-site-starter) [**Use this template**](https://github.com/minyona/team-site-starter/generate)
 
 From the project folder, run these two commands after every change to `src/team.json`.
 
