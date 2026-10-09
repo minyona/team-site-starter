@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import http from "node:http";
 import path from "node:path";
 import { containsForbiddenToken, denylistHashes, FORBIDDEN_WORD_SHA256, privacyOf, scanTeam, sourceSecrets } from "./lib/privacy.mjs";
 
@@ -217,6 +218,80 @@ function checkLinks(distDir, files, extra) {
   return external;
 }
 
+function fileInDist(distDir, urlPath) {
+  let rel = decodeURIComponent(String(urlPath || "/").split("?")[0].split("#")[0]);
+  rel = rel.replace(/^\/+/, "");
+  if (rel === "" || rel.endsWith("/")) rel += "index.html";
+  const root = path.resolve(distDir);
+  const file = path.resolve(root, rel);
+  if (file !== root && !file.startsWith(root + path.sep)) return null;
+  return file;
+}
+
+function staticServer(distDir) {
+  return http.createServer((req, res) => {
+    const file = fileInDist(distDir, req.url || "/");
+    if (!file || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
+      res.writeHead(404);
+      res.end("missing");
+      return;
+    }
+    res.end(fs.readFileSync(file));
+  });
+}
+
+function listen(server) {
+  return new Promise((resolve) => server.listen(0, "127.0.0.1", () => resolve(server.address().port)));
+}
+
+async function probePublishedSite(distDir, indexHtml) {
+  const site = staticServer(distDir);
+  const port = await listen(site);
+  const get = async (urlPath) => {
+    const res = await fetch(`http://127.0.0.1:${port}${urlPath}`);
+    return { status: res.status, text: await res.text() };
+  };
+  try {
+    const weather = await get("/weather/?mock=1");
+    const teamFile = await get("/team.json");
+    const inline = extractTeam(weather.text);
+    const inlineOk = !!(inline && !inline.__parseError && inline.team && inline.tournaments);
+    const css = await get("/weather/weather.css");
+    const script = await get("/weather/weather.js");
+    if (weather.status !== 200 || css.status !== 200 || script.status !== 200) {
+      fail("built weather page is missing");
+    } else if (!inlineOk && teamFile.status !== 200) {
+      fail("built weather page cannot load the team data");
+    } else {
+      pass("built weather page loads its team data");
+    }
+
+    const appJs = fs.readFileSync(path.join(distDir, "app.js"), "utf8");
+    if (!appJs.includes("weather/?t=")) fail("home tournament cards do not link to the weather page");
+    else {
+      const card = await get("/weather/?t=card");
+      if (card.status === 200) pass("home tournament card weather link resolves in dist/");
+      else fail("home tournament card weather link does not resolve in dist/");
+    }
+
+    const refs = [...indexHtml.matchAll(/(?:href|src)\s*=\s*"([^"]*)"/gi)].map((m) => m[1]);
+    let localRefs = 0;
+    for (const ref of refs) {
+      if (classify(ref) !== "internal") continue;
+      localRefs += 1;
+      const clean = ref.split("#")[0].split("?")[0];
+      const urlPath = clean.startsWith("/") ? clean : `/${clean.replace(/^\.\//, "")}`;
+      const target = urlPath.endsWith("/") ? `${urlPath}index.html` : urlPath;
+      const res = await get(target);
+      if (res.status === 200) pass(`dist/index.html asset ${ref}`);
+      else fail(`dist/index.html asset ${ref} is missing`);
+    }
+    if (!localRefs) fail("dist/index.html references no local assets");
+  } finally {
+    await new Promise((resolve) => site.close(resolve));
+  }
+}
+
 function tabIds(appJs) {
   const body = appJs.match(/const TABS = \{([\s\S]*?)\n\};/);
   if (!body) return null;
@@ -239,20 +314,8 @@ async function browserChecks(distDir, tabs) {
     skip(`browser checks, Playwright is installed but Chromium did not launch (${err.message}). Skipped opening each enabled tab, and horizontal overflow at 320, 375, 390, 768, and 1024.`);
     return;
   }
-  const server = await import("node:http");
-  const http = server.default || server;
-  const site = http.createServer((req, res) => {
-    const url = decodeURIComponent((req.url || "/").split("?")[0]);
-    const file = path.join(distDir, url === "/" ? "index.html" : url);
-    if (!file.startsWith(distDir) || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
-      res.writeHead(404);
-      res.end("missing");
-      return;
-    }
-    res.end(fs.readFileSync(file));
-  });
-  await new Promise((resolve) => site.listen(0, "127.0.0.1", resolve));
-  const port = site.address().port;
+  const site = staticServer(distDir);
+  const port = await listen(site);
   try {
     const page = await browser.newPage();
     for (const width of widths) {
@@ -401,6 +464,7 @@ async function main() {
           skip("live HEAD checks. Re-run with --online to request each external link.");
         }
 
+        await probePublishedSite(distDir, html);
         await browserChecks(distDir, enabled);
       }
     }
