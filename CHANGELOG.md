@@ -10,3 +10,4 @@ First public release of the Sideline starter.
 - The weekend weather page reads the live National Weather Service forecast for each field. A `?mock=` flag forces the sample fixtures.
 - `netlify.toml` builds with `node build.mjs` and publishes `dist`. There is no package install.
 - `scripts/release.mjs` writes `sideline-v0.1.0.zip` from the committed source. The zip leaves out `.git`, `.cursor`, `node_modules`, and `dist`.
+- The copy step uses GitHub's Use this template button first, so a new repo does not change this starter.
